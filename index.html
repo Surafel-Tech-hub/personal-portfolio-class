@@ -41,15 +41,32 @@
 
     <!-- HERO -->
     <section class="hero" id="home" aria-labelledby="hero-title">
-      <div class="container hero-inner">
-        <p class="eyebrow">Information Systems Student</p>
-        <h1 id="hero-title">Hi, I'm <span class="accent">Surafel</span>.<br>I build clear, useful things for the web.</h1>
-        <!-- EDIT: Write your own introduction -->
-        <p class="lead">I'm studying Information Systems and learning frontend and full-stack web development. I enjoy turning ideas into well-structured, accessible websites.</p>
-        <div class="button-row">
-          <a class="btn btn-primary" href="#projects">View Projects</a>
-          <a class="btn btn-outline" href="#contact">Contact Me</a>
+      <div class="container hero-grid">
+
+        <div class="hero-text">
+          <p class="eyebrow">Information Systems Student</p>
+          <h1 id="hero-title">Hi, I'm <span class="accent">Surafel</span>.<br>I build clear, useful things for the web.</h1>
+          <!-- EDIT: Write your own introduction -->
+          <p class="lead">I'm studying Information Systems and learning frontend and full-stack web development. I enjoy turning ideas into well-structured, accessible websites.</p>
+          <div class="button-row">
+            <a class="btn btn-primary" href="#projects">View Projects</a>
+            <a class="btn btn-outline" href="#contact">Contact Me</a>
+          </div>
         </div>
+
+        <!-- PROFILE PICTURE
+             EDIT: Save your photo as assets/images/profile.jpg
+             (or change the file name in src below).
+             Recommended image size: 760 x 920 px (portrait).
+             If the image file is missing, this block hides itself automatically. -->
+        <figure class="hero-photo">
+          <img
+            src="assets/images/profile.jpg"
+            alt="Portrait of Surafel"
+            width="380"
+            height="460">
+        </figure>
+
       </div>
     </section>
 
@@ -60,7 +77,7 @@
         <div class="about-grid reveal">
           <div>
             <!-- EDIT: Replace with your real story -->
-            <p>I'm an Information Systems student at WOLLO UNIVERSITY KIOT CAMPUS. My studies sit between business and technology, which taught me to think about how software serves real people and real processes.</p>
+            <p>I'm an Information Systems student at [Your University Name]. My studies sit between business and technology, which taught me to think about how software serves real people and real processes.</p>
             <p>I'm currently learning frontend development and moving toward full-stack work. I care about clean code, readable design, and accessible experiences.</p>
           </div>
           <aside class="panel" aria-label="Quick facts">
@@ -85,7 +102,6 @@
           <li class="card reveal"><h3>HTML</h3><p>Semantic structure and accessible page content.</p></li>
           <li class="card reveal"><h3>CSS</h3><p>Responsive layouts, Flexbox, Grid, and styling.</p></li>
           <li class="card reveal"><h3>JavaScript</h3><p>Page interactivity and working with the DOM.</p></li>
-          <li class="card reveal"><h3>Python</h3><p>Scripting and programming fundamentals.</p></li>
           <li class="card reveal"><h3>Git</h3><p>Version control for tracking changes.</p></li>
           <li class="card reveal"><h3>GitHub</h3><p>Hosting repositories and sharing code.</p></li>
         </ul>
@@ -152,8 +168,8 @@
         <div class="panel reveal">
           <!-- EDIT: Your real university details -->
           <h3>Bachelor of Science in Information Systems</h3>
-          <p class="meta">WOLLO UNIVERSITY· 2017 EC  –  2020 EC </p>
-          <p>Relevant coursework: Database Systems, Systems Analysis and Design, Computer Networking, Data Structures and Algorithms, and Web Development.</p>
+          <p class="meta"> WOLLO UNIVERSITY · 2017 – 2020 Eth.Calender</p>
+          <p>Studied information systems with a focus on database management, systems analysis, web development, and building practical digital solutions.</p>
         </div>
       </div>
     </section>
@@ -163,16 +179,27 @@
       <div class="container">
         <h2 class="section-title" id="contact-title"><span class="num">05</span> Contact</h2>
         <p class="section-intro">I'm open to learning opportunities, collaboration, and conversations about web development.</p>
+
+        <!-- EDIT: Check your phone number and write your city and country -->
+        <ul class="contact-details reveal">
+          <li>
+            <span class="label">Phone</span>
+            <a href="tel:+251903783827">+251 903 783 827</a>
+          </li>
+          <li>
+            <span class="label">Location</span>
+            <span>[Dessie, Ethiopia]</span>
+          </li>
+        </ul>
+
         <ul class="contact-list reveal">
           <!-- EDIT: Replace each link with your own -->
-          <li><a
-  class="btn btn-primary"
-  href="https://mail.google.com/mail/?view=cm&fs=1&to=suragit4020@gmail.com"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Email Me
-</a></li>
+          <li><a class="btn btn-primary"
+     href="https://mail.google.com/mail/?view=cm&fs=1&to=your.email@example.com"
+     target="_blank"
+     rel="noopener noreferrer">
+     Email Me
+  </a></li>
           <li><a class="btn btn-outline" href="https://github.com/Surafel-Tech-hub" target="_blank" rel="noopener noreferrer">GitHub<span class="visually-hidden"> (opens in new tab)</span></a></li>
           <li><a class="btn btn-outline" href="https://www.linkedin.com/in/surafel-tadesse-8822a4323" target="_blank" rel="noopener noreferrer">LinkedIn<span class="visually-hidden"> (opens in new tab)</span></a></li>
         </ul>
@@ -180,11 +207,10 @@
     </section>
 
   </main>
-
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>&copy; <span id="year">2026</span> Surafel Tadesse. Built with HTML, CSS, and JavaScript.</p>
+      <p>&copy; <span id="year">2026</span> Surafel. All rights reserved.</p>
       <ul class="footer-links">
         <li><a href="#home">Back to top</a></li>
         <li><a href="#projects">Projects</a></li>

@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setCurrentYear();
   setupActiveLinks();
   setupRevealOnScroll();
+  setupProfilePhoto();
 });
 
 /* ---------- Mobile menu ---------- */
@@ -118,4 +119,26 @@ function setupRevealOnScroll() {
   }, { threshold: 0.12 });
 
   items.forEach(function (el) { observer.observe(el); });
+}
+
+/* ---------- Profile picture: hide the frame if the image file is missing ---------- */
+function setupProfilePhoto() {
+  var photo = document.querySelector(".hero-photo");
+  var grid = document.querySelector(".hero-grid");
+  if (!photo) return;
+  var img = photo.querySelector("img");
+  if (!img) return;
+
+  function hidePhoto() {
+    photo.hidden = true;
+    photo.style.display = "none";
+    if (grid) grid.classList.add("no-photo");
+  }
+
+  // The image may already have failed before this script ran
+  if (img.complete && img.naturalWidth === 0) {
+    hidePhoto();
+  } else {
+    img.addEventListener("error", hidePhoto);
+  }
 }
