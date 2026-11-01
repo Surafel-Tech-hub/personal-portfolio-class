@@ -893,3 +893,61 @@ code {
     transform: none;
   }
 }
+
+/* ---------- Infinite Spiral ---------- */
+
+#infinite-spiral {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  min-height: 320px;
+  overflow: hidden;
+  isolation: isolate;
+  perspective: 1000px;
+}
+
+.infinite-spiral__stage {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.infinite-spiral__item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.24);
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: 0 14px 38px rgb(8 6 18 / 0.2);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+  text-decoration: none;
+}
+
+.infinite-spiral__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-position: center;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  #infinite-spiral {
+    height: 450px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .infinite-spiral__item {
+    transition: none;
+  }
+}
+
