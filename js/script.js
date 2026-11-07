@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setupRevealOnScroll();
   setupProfilePhoto();
   setupInfiniteSpiral();
+  setupThemeToggle();
 });
 
 /* ---------- Mobile menu ---------- */
@@ -144,6 +145,66 @@ function setupProfilePhoto() {
   }
 }
 
+/* ---------- Dark / light theme with circular ripple ---------- */
+function setupThemeToggle() {
+  var btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+
+  var root = document.documentElement;
+  var meta = document.querySelector('meta[name="theme-color"]');
+  var barColor = { dark: "#080B09", light: "#F7FAF8" };
+
+  function sync() {
+    var light = root.dataset.theme === "light";
+    btn.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+    if (meta) meta.setAttribute("content", light ? barColor.light : barColor.dark);
+  }
+
+  function apply(next) {
+    root.dataset.theme = next;
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    sync();
+  }
+
+  sync();
+
+  btn.addEventListener("click", function () {
+    var next = root.dataset.theme === "light" ? "dark" : "light";
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // No animation support, or the user prefers less motion
+    if (!document.startViewTransition || reduceMotion) {
+      apply(next);
+      return;
+    }
+
+    // The ripple starts from the center of the button
+    var rect = btn.getBoundingClientRect();
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    var radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    document.startViewTransition(function () { apply(next); }).ready.then(function () {
+      root.animate(
+        {
+          clipPath: [
+            "circle(0px at " + x + "px " + y + "px)",
+            "circle(" + radius + "px at " + x + "px " + y + "px)"
+          ]
+        },
+        {
+          duration: 700,
+          easing: "cubic-bezier(.65, 0, .35, 1)",
+          pseudoElement: "::view-transition-new(root)"
+        }
+      );
+    });
+  });
+}
+
 /* ---------- Infinite Spiral ---------- */
 function setupInfiniteSpiral() {
   var root = document.getElementById("infinite-spiral");
@@ -158,24 +219,24 @@ function setupInfiniteSpiral() {
     { src: "assets/images/landscape-6.jpg", alt: "Image 6" }
   ];
 
-var settings = {
-  speed: 0.245,
-  direction: "up",
-  radius: 300,
-  cardWidth: 150,
-  cardHeight: 150,
-  verticalSpacing: 100,
-  perspective: 1050,
-  cardsPerTurn: 7,
-  rotation: 0,
-  cardTilt: 0,
-  cardRadius: 10,
-  centerScale: 1.15,
-  edgeFade: 0.3,
-  edgeBlur: 6,
-  pauseOnHover: true,
-  grayscale: 0.3
-};
+  var settings = {
+    speed: 0.245,
+    direction: "up",
+    radius: 300,
+    cardWidth: 150,
+    cardHeight: 150,
+    verticalSpacing: 100,
+    perspective: 1050,
+    cardsPerTurn: 7,
+    rotation: 0,
+    cardTilt: 0,
+    cardRadius: 10,
+    centerScale: 1.15,
+    edgeFade: 0.3,
+    edgeBlur: 6,
+    pauseOnHover: true,
+    grayscale: 0.3
+  };
 
   var stage = document.createElement("div");
   stage.className = "infinite-spiral__stage";
@@ -202,8 +263,7 @@ var settings = {
     img.alt = image.alt;
     img.draggable = false;
     img.loading = index < 6 ? "eager" : "lazy";
-    img.style.filter =
-      "grayscale(" + settings.grayscale + ")";
+    img.style.filter = "grayscale(" + settings.grayscale + ")";
 
     card.appendChild(img);
     stage.appendChild(card);
@@ -251,47 +311,24 @@ var settings = {
   }
 
   function smoothstep(min, max, value) {
-    var x = clamp(
-      (value - min) / (max - min || 1),
-      0,
-      1
-    );
-
+    var x = clamp((value - min) / (max - min || 1), 0, 1);
     return x * x * (3 - 2 * x);
   }
 
   function render(time) {
-    var delta = Math.min(
-      (time - previousTime) / 1000,
-      0.05
-    );
-
+    var delta = Math.min((time - previousTime) / 1000, 0.05);
     previousTime = time;
 
-    var motionPaused =
-      settings.pauseOnHover && hovered;
+    var motionPaused = settings.pauseOnHover && hovered;
+    var desiredAutoSpeed = visible && !motionPaused ? settings.speed : 0;
 
-    var desiredAutoSpeed =
-      visible && !motionPaused
-        ? settings.speed
-        : 0;
+    var speedBlend = 1 - Math.exp(-delta * 7);
+    autoSpeed += (desiredAutoSpeed - autoSpeed) * speedBlend;
 
-    var speedBlend =
-      1 - Math.exp(-delta * 7);
+    targetProgress += autoSpeed * delta;
 
-    autoSpeed +=
-      (desiredAutoSpeed - autoSpeed) *
-      speedBlend;
-
-    targetProgress +=
-      autoSpeed * delta;
-
-    var followBlend =
-      1 - Math.exp(-delta * 11);
-
-    progress +=
-      (targetProgress - progress) *
-      followBlend;
+    var followBlend = 1 - Math.exp(-delta * 11);
+    progress += (targetProgress - progress) * followBlend;
 
     var count = cards.length;
     var half = count / 2;
@@ -306,141 +343,53 @@ var settings = {
     );
 
     var responsiveRadius =
-      Math.min(
-        settings.radius,
-        Math.max(72, width * 0.36)
-      ) * fit;
+      Math.min(settings.radius, Math.max(72, width * 0.36)) * fit;
 
-    var fadeStart =
-      clamp(
-        1 - settings.edgeFade,
-        0,
-        0.98
-      );
-
-    var turnSize =
-      Math.max(settings.cardsPerTurn, 1);
+    var fadeStart = clamp(1 - settings.edgeFade, 0, 0.98);
+    var turnSize = Math.max(settings.cardsPerTurn, 1);
 
     cards.forEach(function (card, index) {
-      var offset =
-        index - progress;
+      var offset = index - progress;
+      offset = modulo(offset + half, count) - half;
 
-      offset =
-        modulo(
-          offset + half,
-          count
-        ) - half;
+      var edge = Math.min(Math.abs(offset) / Math.max(half, 1), 1);
+      var opacity = 1 - smoothstep(fadeStart, 1, edge);
 
-      var edge =
-        Math.min(
-          Math.abs(offset) /
-            Math.max(half, 1),
-          1
-        );
+      var focus = 1 - Math.min(Math.abs(offset) / Math.max(turnSize * 0.65, 1), 1);
 
-      var opacity =
-        1 -
-        smoothstep(
-          fadeStart,
-          1,
-          edge
-        );
+      var scale = (1 + (settings.centerScale - 1) * focus) * fit;
 
-      var focus =
-        1 -
-        Math.min(
-          Math.abs(offset) /
-            Math.max(
-              turnSize * 0.65,
-              1
-            ),
-          1
-        );
+      var angle = offset * (360 / turnSize) + settings.rotation;
+      var angleRadians = (angle * Math.PI) / 180;
 
-      var scale =
-        (1 +
-          (settings.centerScale - 1) *
-            focus) *
-        fit;
+      var x = Math.sin(angleRadians) * responsiveRadius;
+      var z = Math.cos(angleRadians) * responsiveRadius;
 
-      var angle =
-        offset *
-          (360 / turnSize) +
-        settings.rotation;
+      var depthScale = clamp(
+        settings.perspective / Math.max(settings.perspective - z, 1),
+        0.72,
+        1.45
+      );
 
-      var angleRadians =
-        (angle * Math.PI) / 180;
+      var visualScale = scale * depthScale;
 
-      var x =
-        Math.sin(angleRadians) *
-        responsiveRadius;
+      var depth = (z / Math.max(responsiveRadius, 1) + 1) / 2;
 
-      var z =
-        Math.cos(angleRadians) *
-        responsiveRadius;
-
-      var depthScale =
-        clamp(
-          settings.perspective /
-            Math.max(
-              settings.perspective - z,
-              1
-            ),
-          0.72,
-          1.45
-        );
-
-      var visualScale =
-        scale * depthScale;
-
-      var depth =
-        (z /
-          Math.max(
-            responsiveRadius,
-            1
-          ) +
-          1) /
-        2;
-
-      var blur =
-        settings.edgeBlur *
-        smoothstep(
-          0.35,
-          1,
-          edge
-        );
+      var blur = settings.edgeBlur * smoothstep(0.35, 1, edge);
 
       card.style.transform =
         "translate(-50%, -50%) " +
-        "translate3d(" +
-        x +
-        "px, " +
-        offset *
-          settings.verticalSpacing *
-          fit +
-        "px, 0) " +
-        "rotateZ(" +
-        settings.cardTilt +
-        "deg) " +
-        "scale(" +
-        visualScale +
-        ")";
+        "translate3d(" + x + "px, " +
+        offset * settings.verticalSpacing * fit + "px, 0) " +
+        "rotateZ(" + settings.cardTilt + "deg) " +
+        "scale(" + visualScale + ")";
 
-      card.style.opacity =
-        opacity.toFixed(3);
+      card.style.opacity = opacity.toFixed(3);
 
       card.style.filter =
-        blur > 0.01
-          ? "blur(" +
-            blur.toFixed(2) +
-            "px)"
-          : "none";
+        blur > 0.01 ? "blur(" + blur.toFixed(2) + "px)" : "none";
 
-      card.style.zIndex =
-        String(
-          Math.round(depth * 100000) +
-            index
-        );
+      card.style.zIndex = String(Math.round(depth * 100000) + index);
     });
 
     requestAnimationFrame(render);
@@ -449,34 +398,33 @@ var settings = {
   requestAnimationFrame(render);
 }
 
+/* ---------- Loader ---------- */
 window.addEventListener('DOMContentLoaded', () => {
     const percentageEl = document.getElementById('percentage');
     const progressBar = document.getElementById('progress-bar');
     const loaderWrapper = document.getElementById('loader-wrapper');
     const portfolioContent = document.getElementById('portfolio-content'); // Target your portfolio wrapper
-    
+
     let count = 0;
-    
+
     // Adjust speed here (lower interval = faster loading)
     const loaderInterval = setInterval(() => {
         count++;
-        
+
         // Update values
         percentageEl.textContent = count;
         progressBar.style.width = count + '%';
-        
+
         // Once it reaches 100, remove the overlay gracefully
         if (count >= 100) {
             clearInterval(loaderInterval);
-            
-             // Fades out the loading screen
+
+            // Fades out the loading screen
             loaderWrapper.classList.add('fade-out');
-            
+
             // Simultaneously fades in your portfolio sections
             portfolioContent.classList.remove('hidden-content');
             portfolioContent.classList.add('reveal-content');
         }
-    }, 25); 
+    }, 25);
 });
-
-

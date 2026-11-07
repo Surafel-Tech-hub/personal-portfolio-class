@@ -1,17 +1,37 @@
+/* ---------- 1. Theme variables ---------- */
+
 :root {
+  color-scheme: dark;
   --bg: #080B09;
   --bg-secondary: #101712;
   --bg-charcoal: #161A18;
   --accent: #35D879;
   --accent-soft: #63E69A;
+  --on-accent: #04110A;
   --text: #EEF3EF;
   --text-muted: #A3AEA6;
-  --border: rgba(53, 216, 121, 0.22);
-  --glow: 0 0 24px rgba(53, 216, 121, 0.16);
+  --bg-rgb: 8, 11, 9;
+  --accent-rgb: 53, 216, 121;
+  --border: rgba(var(--accent-rgb), 0.22);
+  --glow: 0 0 24px rgba(var(--accent-rgb), 0.16);
   --radius: 12px;
   --header-h: 68px;
   --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F7FAF8;
+  --bg-secondary: #ECF3EE;
+  --bg-charcoal: #FFFFFF;
+  --accent: #0A7A43;
+  --accent-soft: #0D6B3B;
+  --on-accent: #FFFFFF;
+  --text: #0F1A14;
+  --text-muted: #4A5A50;
+  --bg-rgb: 247, 250, 248;
+  --accent-rgb: 10, 122, 67;
 }
 
 
@@ -105,7 +125,7 @@ code {
   left: 1rem;
   top: -4rem;
   background: var(--accent);
-  color: #04110A;
+  color: var(--on-accent);
   padding: 0.6rem 1rem;
   border-radius: 6px;
   font-weight: 700;
@@ -123,7 +143,7 @@ code {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(8, 11, 9, 0.92);
+  background: rgba(var(--bg-rgb), 0.92);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
@@ -149,7 +169,7 @@ code {
 
 .logo:hover {
   color: var(--text);
-  text-shadow: 0 0 14px rgba(53, 216, 121, 0.5);
+  text-shadow: 0 0 14px rgba(var(--accent-rgb), 0.5);
 }
 
 .nav-links {
@@ -170,7 +190,7 @@ code {
 .nav-links a:hover,
 .nav-links a.active {
   color: var(--accent);
-  background: rgba(53, 216, 121, 0.08);
+  background: rgba(var(--accent-rgb), 0.08);
 }
 
 .nav-toggle {
@@ -238,12 +258,12 @@ code {
 
 .btn-primary {
   background: var(--accent);
-  color: #04110A;
+  color: var(--on-accent);
 }
 
 .btn-primary:hover {
   background: var(--accent-soft);
-  color: #04110A;
+  color: var(--on-accent);
 }
 
 .btn-outline {
@@ -252,7 +272,7 @@ code {
 }
 
 .btn-outline:hover {
-  background: rgba(53, 216, 121, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
 }
 
 
@@ -268,7 +288,7 @@ code {
   background:
     radial-gradient(
       ellipse 60% 50% at 80% 10%,
-      rgba(53, 216, 121, 0.12),
+      rgba(var(--accent-rgb), 0.12),
       transparent
     ),
     var(--bg);
@@ -321,228 +341,90 @@ code {
 /* ---------- Profile picture ---------- */
 
 /*
-  The image is no longer displayed as a card.
-
-  It blends into the dark hero background from
-  ALL FOUR SIDES.
+  Two styles you can switch between in index.html:
+    class="hero-photo hero-photo--frame"  -> rounded framed photo
+    class="hero-photo hero-photo--arch"   -> arch shape with a ring
 */
 
 .hero-photo {
   position: relative;
   margin: 0;
   justify-self: end;
-
-  /*
-    Slightly larger than before.
-  */
-  width: min(400px, 100%);
-  aspect-ratio: 380 / 460;
-
-  /*
-    Remove the old box appearance.
-  */
-  border: none;
-  border-radius: 0;
-  background: transparent;
-
-  overflow: visible;
-
-  /*
-    Fade from the center toward ALL FOUR EDGES.
-
-    This means:
-    - left fades
-    - right fades
-    - top fades
-    - bottom fades
-  */
-  -webkit-mask-image: radial-gradient(
-    ellipse 68% 68% at 50% 48%,
-    black 35%,
-    rgba(0, 0, 0, 0.95) 52%,
-    rgba(0, 0, 0, 0.65) 68%,
-    rgba(0, 0, 0, 0.25) 84%,
-    transparent 100%
-  );
-
-  mask-image: radial-gradient(
-    ellipse 68% 68% at 50% 48%,
-    black 35%,
-    rgba(0, 0, 0, 0.95) 52%,
-    rgba(0, 0, 0, 0.65) 68%,
-    rgba(0, 0, 0, 0.25) 84%,
-    transparent 100%
-  );
-
-  /*
-    Dark green atmospheric shadow.
-  */
-  filter: drop-shadow(
-    0 24px 50px rgba(6, 48, 26, 0.65)
-  );
+  width: min(380px, 100%);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--bg-charcoal);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.4s ease,
+    outline-offset 0.4s ease;
 }
-
-
-/* ---------- Profile image ---------- */
 
 .hero-photo img {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
   object-position: center top;
-
   display: block;
-
-  /*
-    NORMAL STATE:
-    Darker and more mysterious.
-  */
-  opacity: 0.64;
-
-  transform: scale(1);
-
-  /*
-    Dark cinematic appearance.
-  */
-  filter:
-    brightness(0.82)
-    saturate(1.79)
-    contrast(1.05);
-
-  /*
-    Smooth hover animation.
-  */
- 
-  transition:
-  opacity 2.5s ease,
-  transform 2.5s cubic-bezier(0.2, 0.7, 0.2, 1),
-  filter 2.2s ease;
-
- 
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-
-
-/* ---------- Hover ---------- */
-
-/*
-  When the mouse is over the image:
-
-  - brighter
-  - slightly bigger
-  - slightly more colorful
-*/
 
 .hero-photo:hover img {
-  opacity: 0.94;
-
-  /*
-    Slightly larger than the normal size.
-  */
-  transform: scale(1.07);
-
-  filter:
-    brightness(1.08)
-    saturate(1.05)
-    contrast(1.05);
+  transform: scale(1.05);
 }
 
 
-/* ---------- Image atmospheric overlay ---------- */
+/* ----- Style 1: framed photo ----- */
 
-/*
-  This creates additional fading at:
+.hero-photo--frame {
+  border-radius: 22px;
+  border: 2px solid var(--accent);
+  box-shadow:
+    14px 14px 0 rgba(var(--accent-rgb), 0.22),
+    0 20px 50px rgba(var(--accent-rgb), 0.18);
+}
 
-  TOP
-  BOTTOM
-  LEFT
-  RIGHT
-
-  so the image doesn't look like a rectangle.
-*/
-
-.hero-photo::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  background:
-
-    /*
-      TOP + BOTTOM fade
-    */
-    linear-gradient(
-      to bottom,
-      rgba(8, 11, 9, 0.98) 0%,
-      rgba(8, 11, 9, 0.45) 13%,
-      transparent 30%,
-      transparent 70%,
-      rgba(8, 11, 9, 0.45) 87%,
-      rgba(8, 11, 9, 0.98) 100%
-    ),
-
-    /*
-      LEFT + RIGHT fade
-    */
-    linear-gradient(
-      to right,
-      rgba(8, 11, 9, 0.88) 0%,
-      rgba(8, 11, 9, 0.30) 13%,
-      transparent 30%,
-      transparent 70%,
-      rgba(8, 11, 9, 0.30) 87%,
-      rgba(8, 11, 9, 0.88) 100%
-    ),
-
-    /*
-      Soft green atmosphere over the image.
-    */
-    radial-gradient(
-      ellipse at center,
-      transparent 40%,
-      rgba(6, 48, 26, 0.22) 100%
-    );
-
-  transition: opacity 0.45s ease;
+.hero-photo--frame:hover {
+  transform: translate(-4px, -4px);
+  box-shadow:
+    20px 20px 0 rgba(var(--accent-rgb), 0.3),
+    0 28px 60px rgba(var(--accent-rgb), 0.25);
 }
 
 
-/* ---------- Green atmospheric glow ---------- */
+/* ----- Style 2: arch with a ring ----- */
 
-.hero-photo::before {
-  content: "";
+.hero-photo--arch {
+  border-radius: 999px 999px 26px 26px;
+  outline: 2px solid rgba(var(--accent-rgb), 0.55);
+  outline-offset: 12px;
+  box-shadow: 0 24px 60px rgba(var(--accent-rgb), 0.2);
+}
 
-  position: absolute;
-  z-index: -1;
+.hero-photo--arch:hover {
+  outline-offset: 18px;
+  box-shadow: 0 30px 70px rgba(var(--accent-rgb), 0.3);
+}
 
-  width: 80%;
-  height: 75%;
 
-  left: 10%;
-  top: 13%;
+/* ----- Style 3: full circle with a ring ----- */
 
-  background: rgba(20, 120, 65, 0.14);
-
-  filter: blur(75px);
-
+.hero-photo--circle {
+  aspect-ratio: 1 / 1;
+  width: min(360px, 100%);
   border-radius: 50%;
-
-  pointer-events: none;
-
-  transition:
-    opacity 0.45s ease,
-    transform 0.55s ease;
+  outline: 2px solid rgba(var(--accent-rgb), 0.55);
+  outline-offset: 12px;
+  box-shadow: 0 24px 60px rgba(var(--accent-rgb), 0.2);
 }
 
+.hero-photo--circle img {
+  object-position: center 20%;
+}
 
-/* Make the green glow stronger when hovering */
-
-.hero-photo:hover::before {
-  opacity: 1.35;
-  transform: scale(1.08);
+.hero-photo--circle:hover {
+  outline-offset: 18px;
+  box-shadow: 0 30px 70px rgba(var(--accent-rgb), 0.3);
 }
 
 
@@ -681,7 +563,7 @@ code {
   font-size: 0.78rem;
   color: var(--accent-soft);
   border: 1px solid var(--border);
-  background: rgba(53, 216, 121, 0.06);
+  background: rgba(var(--accent-rgb), 0.06);
   padding: 0.2rem 0.65rem;
   border-radius: 999px;
 }
@@ -799,10 +681,7 @@ code {
     padding: 4rem 0;
   }
 
-  /*
-    Hero stacks:
-    text first, picture below it.
-  */
+  /* Hero stacks: text first, picture below it */
 
   .hero-grid {
     grid-template-columns: 1fr;
@@ -826,10 +705,7 @@ code {
     position: relative;
   }
 
-  /*
-    Menu is only hidden when JS is running,
-    so it never becomes unreachable.
-  */
+  /* Menu is only hidden when JS is running, so it never becomes unreachable */
 
   .js .nav-links {
     display: none;
@@ -857,9 +733,7 @@ code {
     padding: 5rem 0 4rem;
   }
 
-  /*
-    Center the photo on mobile.
-  */
+  /* Center the photo on mobile */
 
   .hero-photo {
     justify-self: center;
@@ -889,6 +763,7 @@ code {
     transform: none;
   }
 
+  .hero-photo:hover,
   .hero-photo:hover img {
     transform: none;
   }
@@ -918,8 +793,8 @@ code {
   left: 50%;
   display: block;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.24);
-  background: rgb(255 255 255 / 0.08);
+  border: 1px solid var(--border);
+  background: rgba(var(--accent-rgb), 0.08);
   box-shadow: 0 14px 38px rgb(8 6 18 / 0.2);
   transform-style: preserve-3d;
   backface-visibility: hidden;
@@ -951,6 +826,8 @@ code {
   }
 }
 
+
+/* ---------- Loader (stays dark in both themes) ---------- */
 
 /* Fullscreen Loader Background */
 #loader-wrapper {
@@ -1024,9 +901,72 @@ code {
     margin: 0;
 }
 
-/* Class to fade out the loader once finished */
-#loader-wrapper.fade-out {
-    opacity: 0;
-    visibility: hidden;
+
+/* ---------- Theme toggle button ---------- */
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  overflow: hidden;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 
+.theme-toggle:hover {
+  box-shadow: var(--glow);
+  border-color: var(--accent);
+}
+
+.theme-toggle .icon {
+  grid-area: 1 / 1;
+  transition: transform 0.5s cubic-bezier(.65, 0, .35, 1), opacity 0.3s;
+}
+
+/* Dark mode shows the sun (click to go light) */
+.theme-toggle .moon {
+  transform: rotate(90deg) scale(0);
+  opacity: 0;
+}
+
+/* Light mode shows the moon (click to go dark) */
+:root[data-theme="light"] .theme-toggle .sun {
+  transform: rotate(-90deg) scale(0);
+  opacity: 0;
+}
+
+:root[data-theme="light"] .theme-toggle .moon {
+  transform: rotate(0) scale(1);
+  opacity: 1;
+}
+
+.nav-links {
+  margin-left: auto;
+  margin-right: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  .theme-toggle {
+    order: 2;
+    margin-left: auto;
+    margin-right: 0.6rem;
+  }
+
+  .nav-toggle {
+    order: 3;
+  }
+}
+
+
+/* ---------- Ripple transition ---------- */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
