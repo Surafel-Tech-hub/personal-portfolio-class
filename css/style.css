@@ -951,3 +951,82 @@ code {
   }
 }
 
+
+/* Fullscreen Loader Background */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #080d0a; /* Ultra-dark forest black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+}
+
+#loader-wrapper.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Prevents invisible block from blocking clicks */
+}
+
+/* Centered Content Wrapper */
+.loader-content {
+    text-align: center;
+    width: 300px;
+}
+
+/* Percentage Number Styling */
+.percentage-container {
+    font-size: 5.5rem;
+    font-weight: 700;
+    color: #10b981; /* Vibrant emerald green */
+    line-height: 1;
+    margin-bottom: 15px;
+    letter-spacing: -2px;
+}
+
+.percent-sign {
+    color: #065f46; /* Muted deep green for contrast */
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+/* Progress Track Bar */
+.progress-bar-container {
+    width: 100%;
+    height: 3px;
+    background-color: rgba(16, 185, 129, 0.05); /* Slight green tint track */
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+/* Moving Progress Fill */
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #047857, #10b981); /* Dark green to bright green gradient */
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6); /* Vibrant green glow */
+    transition: width 0.1s linear;
+}
+
+/* Subtext Below the Bar */
+.loading-text {
+    color: #4b5563; /* Sleek charcoal gray text */
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+/* Class to fade out the loader once finished */
+#loader-wrapper.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+

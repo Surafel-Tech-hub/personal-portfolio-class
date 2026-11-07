@@ -173,7 +173,7 @@ var settings = {
   centerScale: 1.15,
   edgeFade: 0.3,
   edgeBlur: 6,
-  pauseOnHover: false,
+  pauseOnHover: true,
   grayscale: 0.3
 };
 
@@ -448,4 +448,35 @@ var settings = {
 
   requestAnimationFrame(render);
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+    const percentageEl = document.getElementById('percentage');
+    const progressBar = document.getElementById('progress-bar');
+    const loaderWrapper = document.getElementById('loader-wrapper');
+    const portfolioContent = document.getElementById('portfolio-content'); // Target your portfolio wrapper
+    
+    let count = 0;
+    
+    // Adjust speed here (lower interval = faster loading)
+    const loaderInterval = setInterval(() => {
+        count++;
+        
+        // Update values
+        percentageEl.textContent = count;
+        progressBar.style.width = count + '%';
+        
+        // Once it reaches 100, remove the overlay gracefully
+        if (count >= 100) {
+            clearInterval(loaderInterval);
+            
+             // Fades out the loading screen
+            loaderWrapper.classList.add('fade-out');
+            
+            // Simultaneously fades in your portfolio sections
+            portfolioContent.classList.remove('hidden-content');
+            portfolioContent.classList.add('reveal-content');
+        }
+    }, 25); 
+});
+
 
