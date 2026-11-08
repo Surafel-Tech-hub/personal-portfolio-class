@@ -366,11 +366,13 @@ code {
   object-fit: cover;
   object-position: center top;
   display: block;
+   filter: brightness(0.5);
   transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .hero-photo:hover img {
   transform: scale(1.05);
+  filter: brightness(0.6);
 }
 
 
