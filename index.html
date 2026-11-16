@@ -66,6 +66,7 @@
         <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#education">Education</a></li>
+        <li><a href="#achievements">Achievements</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
 
@@ -157,6 +158,11 @@
               I'm currently learning frontend development and moving toward full-stack work.
               I care about clean code, readable design, and accessible experiences.
             </p>
+
+            <p>
+              Outside programming and university, I enjoy technology, reading, creativity,
+              and continuously learning new things.
+            </p>
           </div>
 
           <aside class="panel" aria-label="Quick facts">
@@ -215,6 +221,14 @@
             <p>Hosting repositories and sharing code.</p>
           </li>
 
+        </ul>
+
+        <h3 class="skills-subtitle">Soft Skills</h3>
+        <ul class="soft-skills-list" aria-label="Soft skills">
+          <li>Problem-solving</li>
+          <li>Teamwork</li>
+          <li>Communication</li>
+          <li>Time management</li>
         </ul>
       </div>
     </section>
@@ -352,7 +366,7 @@
           <h3>Bachelor of Science in Information Systems</h3>
 
           <p class="meta">
-            WOLLO UNIVERSITY · 2017 – 2020 Eth.Calender
+            WOLLO UNIVERSITY · 2017 – 2020 EC
           </p>
 
           <p>
@@ -365,12 +379,87 @@
     </section>
 
 
+    <!-- ACHIEVEMENTS -->
+<section class="section section-alt" id="achievements" aria-labelledby="achievements-title">
+  <div class="container">
+
+    <h2 class="section-title" id="achievements-title">
+      <span class="num">05</span> Achievements
+    </h2>
+
+    <p class="section-intro">
+      Certificates earned through technology learning and professional development.
+    </p>
+
+    <div class="certificate-grid">
+
+      <!-- CERTIFICATE 1 -->
+      <article class="certificate-card reveal">
+
+        <a
+          class="certificate-image-link"
+          href="assets/images/certificates/programming-fundamentals.png"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View Programming Fundamentals certificate">
+
+          <div class="certificate-image">
+            <img
+              src="assets/images/certificates/programming-fundamentals.png"
+              alt="Udacity Programming Fundamentals certificate"
+              loading="lazy">
+          
+          </div>
+        </a>
+
+        <div class="certificate-info">
+          <span class="certificate-tag">UDACITY</span>
+          <h3>Programming Fundamentals</h3>
+          <p>Nanodegree Program Completion</p>
+          <span class="meta">August 19, 2025</span>
+        </div>
+
+      </article>
+
+      <!-- CERTIFICATE 2 -->
+      <article class="certificate-card reveal">
+
+        <a
+          class="certificate-image-link"
+          href="assets/images/certificates/android-fundamentals.png"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View Android Fundamentals certificate">
+
+          <div class="certificate-image">
+            <img
+              src="assets/images/certificates/android-fundamentals.png"
+              alt="Udacity Global Chapters Ethiopia Android Fundamentals certificate"
+              loading="lazy">
+          
+          </div>
+        </a>
+
+        <div class="certificate-info">
+          <span class="certificate-tag">UDACITY</span>
+          <h3>Android Fundamentals</h3>
+          <p>Global Chapters Ethiopia</p>
+          <span class="meta">June 10, 2026</span>
+        </div>
+
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
     <!-- CONTACT -->
     <section class="section" id="contact" aria-labelledby="contact-title">
       <div class="container">
 
         <h2 class="section-title" id="contact-title">
-          <span class="num">05</span> Contact
+          <span class="num">06</span> Contact
         </h2>
 
         <p class="section-intro">
@@ -393,6 +482,37 @@
 
         </ul>
 
+        <form
+          class="contact-form reveal"
+          id="contact-form"
+          action="https://formspree.io/f/xbgogbza"
+          method="POST">
+          <input type="hidden" name="_subject" value="New message from your portfolio">
+          <input type="text" name="_gotcha" class="form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <div class="form-field">
+            <label for="contact-name">Your name</label>
+            <input id="contact-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80" placeholder="Enter your name">
+          </div>
+
+          <div class="form-field">
+            <label for="contact-email">Your email</label>
+            <input id="contact-email" name="email" type="email" autocomplete="email" required maxlength="120" placeholder="you@example.com">
+          </div>
+
+          <div class="form-field">
+            <label for="contact-subject">Subject</label>
+            <input id="contact-subject" name="subject" type="text" required minlength="3" maxlength="120" placeholder="What is your message about?">
+          </div>
+
+          <div class="form-field">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" rows="6" required minlength="10" maxlength="3000" placeholder="Write your message..."></textarea>
+          </div>
+
+          <button class="btn btn-primary" type="submit">Send Message</button>
+          <p class="form-note" id="contact-form-status" aria-live="polite">All fields are required. Your message will be sent to my email.</p>
+        </form>
 
         <ul class="contact-list reveal">
 
@@ -437,8 +557,8 @@
           <li>
   <a
     class="btn btn-primary"
-    href="documents/Surafel-CV.docx"
-    download="Surafel-CV.docx">
+    href="documents/Surafel_Tadesse_CV.docx"
+    download="Surafel_Tadesse_CV.docx">
 
     <svg
       xmlns="http://www.w3.org/2000/svg"

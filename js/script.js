@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setupProfilePhoto();
   setupInfiniteSpiral();
   setupThemeToggle();
+  setupContactForm();
 });
 
 /* ---------- Mobile menu ---------- */
@@ -27,7 +28,6 @@ function setupMobileMenu() {
     if (returnFocus) toggle.focus();
   }
 
-  // Click or Enter/Space on the button (buttons handle keys natively)
   toggle.addEventListener("click", function () {
     if (menu.classList.contains("open")) {
       closeMenu(false);
@@ -36,28 +36,28 @@ function setupMobileMenu() {
     }
   });
 
-  // Close after choosing a link
   menu.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function () { closeMenu(false); });
+    link.addEventListener("click", function () {
+      closeMenu(false);
+    });
   });
 
-  // Escape closes the menu and returns focus to the button
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" && menu.classList.contains("open")) {
       closeMenu(true);
     }
   });
 
-  // Click outside closes the menu
   document.addEventListener("click", function (event) {
-    if (menu.classList.contains("open") &&
-        !menu.contains(event.target) &&
-        !toggle.contains(event.target)) {
+    if (
+      menu.classList.contains("open") &&
+      !menu.contains(event.target) &&
+      !toggle.contains(event.target)
+    ) {
       closeMenu(false);
     }
   });
 
-  // Reset state when the window grows to desktop size
   window.addEventListener("resize", function () {
     if (window.innerWidth > 760) closeMenu(false);
   });
@@ -69,12 +69,13 @@ function setCurrentYear() {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
 
-/* ---------- Highlight the nav link of the section in view ---------- */
+/* ---------- Active navigation links ---------- */
 function setupActiveLinks() {
   var links = document.querySelectorAll(".nav-links a[href^='#']");
   if (!links.length || !("IntersectionObserver" in window)) return;
 
   var sections = [];
+
   links.forEach(function (link) {
     var section = document.querySelector(link.getAttribute("href"));
     if (section) sections.push({ link: link, section: section });
@@ -83,11 +84,16 @@ function setupActiveLinks() {
   var observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (!entry.isIntersecting) return;
-      links.forEach(function (l) {
-        l.classList.remove("active");
-        l.removeAttribute("aria-current");
+
+      links.forEach(function (link) {
+        link.classList.remove("active");
+        link.removeAttribute("aria-current");
       });
-      var match = sections.find(function (s) { return s.section === entry.target; });
+
+      var match = sections.find(function (item) {
+        return item.section === entry.target;
+      });
+
       if (match) {
         match.link.classList.add("active");
         match.link.setAttribute("aria-current", "true");
@@ -95,19 +101,24 @@ function setupActiveLinks() {
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
 
-  sections.forEach(function (s) { observer.observe(s.section); });
+  sections.forEach(function (item) {
+    observer.observe(item.section);
+  });
 }
 
-/* ---------- Gentle fade-in when sections scroll into view ---------- */
+/* ---------- Reveal on scroll ---------- */
 function setupRevealOnScroll() {
   var items = document.querySelectorAll(".reveal");
   if (!items.length) return;
 
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-  // If animations are not wanted or not supported, just show everything
   if (reduceMotion || !("IntersectionObserver" in window)) {
-    items.forEach(function (el) { el.classList.add("visible"); });
+    items.forEach(function (item) {
+      item.classList.add("visible");
+    });
     return;
   }
 
@@ -120,14 +131,18 @@ function setupRevealOnScroll() {
     });
   }, { threshold: 0.12 });
 
-  items.forEach(function (el) { observer.observe(el); });
+  items.forEach(function (item) {
+    observer.observe(item);
+  });
 }
 
-/* ---------- Profile picture: hide the frame if the image file is missing ---------- */
+/* ---------- Profile photo ---------- */
 function setupProfilePhoto() {
   var photo = document.querySelector(".hero-photo");
   var grid = document.querySelector(".hero-grid");
+
   if (!photo) return;
+
   var img = photo.querySelector("img");
   if (!img) return;
 
@@ -137,7 +152,6 @@ function setupProfilePhoto() {
     if (grid) grid.classList.add("no-photo");
   }
 
-  // The image may already have failed before this script ran
   if (img.complete && img.naturalWidth === 0) {
     hidePhoto();
   } else {
@@ -145,24 +159,42 @@ function setupProfilePhoto() {
   }
 }
 
-/* ---------- Dark / light theme with circular ripple ---------- */
+/* ---------- Dark / light theme ---------- */
 function setupThemeToggle() {
   var btn = document.getElementById("theme-toggle");
   if (!btn) return;
 
   var root = document.documentElement;
   var meta = document.querySelector('meta[name="theme-color"]');
-  var barColor = { dark: "#080B09", light: "#F7FAF8" };
+
+  var barColor = {
+    dark: "#080B09",
+    light: "#F7FAF8"
+  };
 
   function sync() {
     var light = root.dataset.theme === "light";
-    btn.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
-    if (meta) meta.setAttribute("content", light ? barColor.light : barColor.dark);
+
+    btn.setAttribute(
+      "aria-label",
+      light ? "Switch to dark mode" : "Switch to light mode"
+    );
+
+    if (meta) {
+      meta.setAttribute(
+        "content",
+        light ? barColor.light : barColor.dark
+      );
+    }
   }
 
   function apply(next) {
     root.dataset.theme = next;
-    try { localStorage.setItem("theme", next); } catch (e) {}
+
+    try {
+      localStorage.setItem("theme", next);
+    } catch (e) {}
+
     sync();
   }
 
@@ -170,24 +202,28 @@ function setupThemeToggle() {
 
   btn.addEventListener("click", function () {
     var next = root.dataset.theme === "light" ? "dark" : "light";
-    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // No animation support, or the user prefers less motion
+    var reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
     if (!document.startViewTransition || reduceMotion) {
       apply(next);
       return;
     }
 
-    // The ripple starts from the center of the button
     var rect = btn.getBoundingClientRect();
     var x = rect.left + rect.width / 2;
     var y = rect.top + rect.height / 2;
+
     var radius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     );
 
-    document.startViewTransition(function () { apply(next); }).ready.then(function () {
+    document.startViewTransition(function () {
+      apply(next);
+    }).ready.then(function () {
       root.animate(
         {
           clipPath: [
@@ -211,12 +247,30 @@ function setupInfiniteSpiral() {
   if (!root) return;
 
   var images = [
-    { src: "assets/images/landscape-1.jpg", alt: "Image 1" },
-    { src: "assets/images/landscape-2.jpg", alt: "Image 2" },
-    { src: "assets/images/landscape-3.jpg", alt: "Image 3" },
-    { src: "assets/images/landscape-4.jpg", alt: "Image 4" },
-    { src: "assets/images/landscape-5.jpg", alt: "Image 5" },
-    { src: "assets/images/landscape-6.jpg", alt: "Image 6" }
+    {
+      src: "assets/images/landscape-1.jpg",
+      alt: "Vintage HTML coding illustration."
+    },
+    {
+      src: "assets/images/landscape-2.jpg",
+      alt: "Vintage CSS styling illustration."
+    },
+    {
+      src: "assets/images/landscape-3.jpg",
+      alt: "Vintage JavaScript programming illustration."
+    },
+    {
+      src: "assets/images/landscape-4.jpg",
+      alt: "Vintage GitHub development illustration."
+    },
+    {
+      src: "assets/images/landscape-5.jpg",
+      alt: "Vintage web development illustration."
+    },
+    {
+      src: "assets/images/landscape-6.jpg",
+      alt: "Vintage programming and technology illustration."
+    }
   ];
 
   var settings = {
@@ -320,7 +374,9 @@ function setupInfiniteSpiral() {
     previousTime = time;
 
     var motionPaused = settings.pauseOnHover && hovered;
-    var desiredAutoSpeed = visible && !motionPaused ? settings.speed : 0;
+
+    var desiredAutoSpeed =
+      visible && !motionPaused ? settings.speed : 0;
 
     var speedBlend = 1 - Math.exp(-delta * 7);
     autoSpeed += (desiredAutoSpeed - autoSpeed) * speedBlend;
@@ -352,44 +408,62 @@ function setupInfiniteSpiral() {
       var offset = index - progress;
       offset = modulo(offset + half, count) - half;
 
-      var edge = Math.min(Math.abs(offset) / Math.max(half, 1), 1);
+      var edge = Math.min(
+        Math.abs(offset) / Math.max(half, 1),
+        1
+      );
+
       var opacity = 1 - smoothstep(fadeStart, 1, edge);
 
-      var focus = 1 - Math.min(Math.abs(offset) / Math.max(turnSize * 0.65, 1), 1);
+      var focus = 1 - Math.min(
+        Math.abs(offset) / Math.max(turnSize * 0.65, 1),
+        1
+      );
 
-      var scale = (1 + (settings.centerScale - 1) * focus) * fit;
+      var scale =
+        (1 + (settings.centerScale - 1) * focus) * fit;
 
-      var angle = offset * (360 / turnSize) + settings.rotation;
+      var angle =
+        offset * (360 / turnSize) + settings.rotation;
+
       var angleRadians = (angle * Math.PI) / 180;
 
       var x = Math.sin(angleRadians) * responsiveRadius;
       var z = Math.cos(angleRadians) * responsiveRadius;
 
       var depthScale = clamp(
-        settings.perspective / Math.max(settings.perspective - z, 1),
+        settings.perspective /
+          Math.max(settings.perspective - z, 1),
         0.72,
         1.45
       );
 
       var visualScale = scale * depthScale;
 
-      var depth = (z / Math.max(responsiveRadius, 1) + 1) / 2;
+      var depth =
+        (z / Math.max(responsiveRadius, 1) + 1) / 2;
 
       var blur = settings.edgeBlur * smoothstep(0.35, 1, edge);
 
       card.style.transform =
         "translate(-50%, -50%) " +
-        "translate3d(" + x + "px, " +
-        offset * settings.verticalSpacing * fit + "px, 0) " +
+        "translate3d(" +
+        x + "px, " +
+        offset * settings.verticalSpacing * fit +
+        "px, 0) " +
         "rotateZ(" + settings.cardTilt + "deg) " +
         "scale(" + visualScale + ")";
 
       card.style.opacity = opacity.toFixed(3);
 
       card.style.filter =
-        blur > 0.01 ? "blur(" + blur.toFixed(2) + "px)" : "none";
+        blur > 0.01
+          ? "blur(" + blur.toFixed(2) + "px)"
+          : "none";
 
-      card.style.zIndex = String(Math.round(depth * 100000) + index);
+      card.style.zIndex = String(
+        Math.round(depth * 100000) + index
+      );
     });
 
     requestAnimationFrame(render);
@@ -399,32 +473,91 @@ function setupInfiniteSpiral() {
 }
 
 /* ---------- Loader ---------- */
-window.addEventListener('DOMContentLoaded', () => {
-    const percentageEl = document.getElementById('percentage');
-    const progressBar = document.getElementById('progress-bar');
-    const loaderWrapper = document.getElementById('loader-wrapper');
-    const portfolioContent = document.getElementById('portfolio-content'); // Target your portfolio wrapper
+window.addEventListener("DOMContentLoaded", function () {
+  var percentageEl = document.getElementById("percentage");
+  var progressBar = document.getElementById("progress-bar");
+  var loaderWrapper = document.getElementById("loader-wrapper");
+  var portfolioContent = document.getElementById("portfolio-content");
 
-    let count = 0;
+  if (!percentageEl || !progressBar || !loaderWrapper || !portfolioContent) {
+    return;
+  }
 
-    // Adjust speed here (lower interval = faster loading)
-    const loaderInterval = setInterval(() => {
-        count++;
+  var count = 0;
 
-        // Update values
-        percentageEl.textContent = count;
-        progressBar.style.width = count + '%';
+  var loaderInterval = setInterval(function () {
+    count++;
 
-        // Once it reaches 100, remove the overlay gracefully
-        if (count >= 100) {
-            clearInterval(loaderInterval);
+    percentageEl.textContent = count;
+    progressBar.style.width = count + "%";
 
-            // Fades out the loading screen
-            loaderWrapper.classList.add('fade-out');
+    if (count >= 100) {
+      clearInterval(loaderInterval);
 
-            // Simultaneously fades in your portfolio sections
-            portfolioContent.classList.remove('hidden-content');
-            portfolioContent.classList.add('reveal-content');
-        }
-    }, 25);
+      loaderWrapper.classList.add("fade-out");
+      portfolioContent.classList.remove("hidden-content");
+      portfolioContent.classList.add("reveal-content");
+    }
+  }, 25);
 });
+
+/* ---------- Contact form (Formspree) ---------- */
+function setupContactForm() {
+  var form = document.getElementById("contact-form");
+  var status = document.getElementById("contact-form-status");
+
+  if (!form || !status) return;
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    var submitButton = form.querySelector('[type="submit"]');
+    var originalButtonText = submitButton ? submitButton.textContent : "";
+
+    status.textContent = "Sending your message...";
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+    }
+
+    try {
+      var response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+          "Accept": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        status.textContent = "Thank you! Your message has been sent.";
+        form.reset();
+      } else {
+        var result = await response.json().catch(function () {
+          return {};
+        });
+
+        status.textContent =
+          result.errors && result.errors.length
+            ? result.errors.map(function (error) {
+                return error.message;
+              }).join(" ")
+            : "Sorry, your message could not be sent. Please try again.";
+      }
+    } catch (error) {
+      status.textContent =
+        "Connection error. Please check your internet and try again.";
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    }
+  });
+}
